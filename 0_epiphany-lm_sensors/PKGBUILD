@@ -1,0 +1,17 @@
+# Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
+
+pkgname=epiphany-lm_sensors
+pkgver=0
+pkgrel=1
+pkgdesc='Adapteva Epiphany lm_sensors extension'
+arch=('any')
+depends=(lm_sensors)
+provides=(epiphany-lm_sensors)
+source=("parallella.conf")
+sha256sums=('cf94ed4700960d9a7564227d3c226c08160cd4a84b0812c2bd354406573a68e9')
+
+package() {
+    install -d -m 0755 $pkgdir/etc/sensors.d
+    install -m 0644 $srcdir/parallella.conf $pkgdir/etc/sensors.d/.
+}
+
