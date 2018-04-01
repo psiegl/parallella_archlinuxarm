@@ -1,0 +1,17 @@
+# Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
+
+pkgname=epiphany-zynqtemp
+pkgver=0
+pkgrel=1
+pkgdesc='Adapteva Epiphany zynqtemp script'
+arch=('any')
+depends=(bc i2c-tools)
+provides=($pkgname)
+source=("zynqtemp.sh")
+sha256sums=('b5a1689224bc2f36a402484f84f4c44e109a5970a2abf67c49969b4e8f73bb92')
+
+package() {
+    mkdir -p $pkgdir/usr/bin
+    install -m 0755 $srcdir/zynqtemp.sh $pkgdir/usr/bin/.
+}
+
