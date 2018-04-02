@@ -1,0 +1,82 @@
+# Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
+
+pkgname=epiphany-lib
+pkgver=2016.11
+pkgrel=2
+pkgdesc='Adapteva Epiphany runtime libraries and utilities'
+arch=(i686 x86_64 armv7h armv7l)
+url='http://www.adapteva.com/'
+license=(GPL3)
+provides=(epiphany-lib)
+makedepends=(epiphany-elf-gcc) # requires ARM (cross-)compiler!
+options=(staticlibs !strip !buildflags)
+source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip"
+        "epiphany.sh"
+        "epiphany_lib.conf")
+sha256sums=('62160f44d47b26bf815170f8a1682c87d853abb5ed9b7b533bed06d4513ad0f7'
+            '97b0a343380182766f7edb21f5c97d8c8e16e66c0851644aac07792f10a921a4'
+            '2c875c9596236b9a3f15bcf723a892d28bd30bd93963292bfde454ad9d1762e0')
+
+# default assumed path: /opt/adapteva/esdk.$pkgver/bsps/current/platform.xml
+build() {
+    cd $srcdir/epiphany-libs-$pkgver
+
+    ./bootstrap
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ \
+                --enable-esim --enable-fast-install \
+                --enable-elib --disable-ehal  --disable-pal-target
+    make
+}
+
+package() {
+    cd $srcdir/epiphany-libs-$pkgver
+
+    install -d -m 0755 $pkgdir/opt/adapteva
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver
+    ln -s esdk.$pkgver $pkgdir/opt/adapteva/esdk
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH
+    ln -s host.$CARCH $pkgdir/opt/adapteva/esdk.$pkgver/tools/host
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+
+
+    # Install bsps, link "current" to E16 parallella
+    # This is what is selected by parallella-firmware
+    # Hopefully, there'll be a way to select the current plat
+    cp -r bsps $pkgdir/opt/adapteva/esdk.$pkgver/
+    ln -sTf parallella_E16G3_1GB $pkgdir/opt/adapteva/esdk.$pkgver/bsps/current
+    chmod -R a+rwX $pkgdir/opt/adapteva/esdk.$pkgver/bsps
+    chmod -R og-w $pkgdir/opt/adapteva/esdk.$pkgver/bsps
+    rm $pkgdir/opt/adapteva/esdk.$pkgver/bsps/Makemodule.am
+
+
+    # Install e-lib
+    install -m 0755 e-lib/libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    #ln -s libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libelib.a
+    install -m 0644 \
+      e-lib/include/e_common.h \
+      e-lib/include/e_coreid.h \
+      e-lib/include/e_ctimers.h \
+      e-lib/include/e_dma.h \
+      e-lib/include/e_ic.h \
+      e-lib/include/e_lib.h \
+      e-lib/include/e_mem.h \
+      e-lib/include/e_mutex.h \
+      e-lib/include/e_regs.h \
+      e-lib/include/e_shm.h \
+      e-lib/include/e_trace.h \
+      e-lib/include/e_types.h \
+      $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+    ln -s e_lib.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/e-lib.h
+
+
+    # Add EPIPHANY export HDF and PATH to profile for all users
+    install -d -m 0755 $pkgdir/etc/profile.d
+    install -m 0755 $srcdir/epiphany.sh $pkgdir/etc/profile.d/.
+
+    # Add EPIPHANY export for headers
+    install -d -m 0755 $pkgdir/etc/ld.so.conf.d
+    install -m 0755 $srcdir/epiphany_lib.conf $pkgdir/etc/ld.so.conf.d/.
+}
+
