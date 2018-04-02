@@ -14,7 +14,7 @@ source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip"
         "epiphany.sh"
         "epiphany_lib.conf")
 sha256sums=('62160f44d47b26bf815170f8a1682c87d853abb5ed9b7b533bed06d4513ad0f7'
-            '3e0f6495691f4c79f558ed6ce0c975ab98b2badd70c2af02d081b33711107e58'
+            '97b0a343380182766f7edb21f5c97d8c8e16e66c0851644aac07792f10a921a4'
             '2c875c9596236b9a3f15bcf723a892d28bd30bd93963292bfde454ad9d1762e0')
 
 # default assumed path: /opt/adapteva/esdk.$pkgver/bsps/current/platform.xml
@@ -22,7 +22,9 @@ build() {
     cd $srcdir/epiphany-libs-$pkgver
 
     ./bootstrap
-    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ --enable-elib --enable-ehal  --disable-pal-target
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ \
+	        --enable-esim --enable-fast-install \
+	        --enable-elib --enable-ehal  --disable-pal-target
     make
 }
 
