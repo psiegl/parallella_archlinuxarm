@@ -1,0 +1,102 @@
+# Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
+
+pkgname=epiphany-hal
+pkgver=2016.11
+pkgrel=2
+pkgdesc='Adapteva Epiphany runtime libraries and utilities'
+arch=(i686 x86_64 armv7h armv7l)
+url='http://www.adapteva.com/'
+license=(GPL3)
+provides=(epiphany-hal)
+makedepends=(epiphany-elf-gcc epiphany-pal) # requires ARM (cross-)compiler!
+depends=(epiphany-lib epiphany-pal)
+options=(staticlibs !strip !buildflags)
+source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip")
+sha256sums=('62160f44d47b26bf815170f8a1682c87d853abb5ed9b7b533bed06d4513ad0f7')
+
+build() {
+    cd $srcdir/epiphany-libs-$pkgver
+
+    ./bootstrap
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ \
+                --enable-esim --enable-fast-install \
+                --disable-elib --enable-ehal --enable-pal-target
+    make
+}
+
+package() {
+    cd $srcdir/epiphany-libs-$pkgver
+
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+
+    # Install e-xml
+    install -m 0644 .libs/libe-xml.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0644 .libs/libe-xml.la $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0755 .libs/libe-xml.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    ln -s libe-xml.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-xml.so.0
+    ln -s libe-xml.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-xml.so
+
+
+    # Install e-hal
+    install -m 0644 .libs/libe-hal.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0644 .libs/libe-hal.la $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0755 .libs/libe-hal.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    ln -s libe-hal.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-hal.so.0
+    ln -s libe-hal.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-hal.so
+
+    install -m 0644 \
+      e-hal/src/epiphany-hal.h \
+      e-hal/src/epiphany-hal-data.h \
+      e-hal/src/epiphany-hal-data-local.h \
+      e-hal/src/epiphany-hal-api.h \
+      e-hal/src/epiphany-hal-api-local.h \
+      e-hal/src/epiphany-shm-manager.h \
+      e-hal/src/memman.h \
+      $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+    ln -s epiphany-hal.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/e-hal.h
+
+
+    # Install e-loader
+    install -m 0644 .libs/libe-loader.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0644 .libs/libe-loader.la $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0755 .libs/libe-loader.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    ln -s libe-loader.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-loader.so.0
+    ln -s libe-loader.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-loader.so
+
+    install -m 0644 e-hal/src/e-loader.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+
+
+    # Install e-trace
+    install -m 0644 .libs/libe-trace.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0644 .libs/libe-trace.la $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    install -m 0755 .libs/libe-trace.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
+    ln -s libe-trace.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-trace.so.0
+    ln -s libe-trace.so.0.0.0 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libe-trace.so
+
+    install -m 0644 e-trace/include/e-trace.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+
+    install -m 0755 e-trace/.libs/e-trace-dump $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-trace/.libs/e-trace-server $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+
+
+    # Install e-server
+    install -m 0755 e-server/.libs/e-server $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+
+
+    # Install utilities
+    install -m 0755 e-utils/.libs/e-clear-shmtable $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-dump-regs $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-hw-rev $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-loader $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/e-meshdump $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-read $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-reset $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+    install -m 0755 e-utils/.libs/e-write $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin
+
+    #install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin/archive
+    #install -m 0755 e-utils/archive/e-eclipse $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin/archive
+    #install -m 0755 e-utils/archive/e-objcopy $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/bin/archive
+}
+
