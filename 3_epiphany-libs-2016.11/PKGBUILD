@@ -1,33 +1,33 @@
 # Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
 
-pkgname=epiphany-libs
+pkgname=epiphany-lib
 pkgver=2016.11
-pkgrel=1
+pkgrel=2
 pkgdesc='Adapteva Epiphany runtime libraries and utilities'
 arch=(i686 x86_64 armv7h armv7l)
 url='http://www.adapteva.com/'
 license=(GPL3)
-provides=(epiphany-libs)
+provides=(epiphany-lib)
 makedepends=(epiphany-elf-gcc) # requires ARM (cross-)compiler!
 options=(staticlibs !strip !buildflags)
-source=("https://github.com/adapteva/$pkgname/archive/$pkgver.zip"
-        "epiphany_hdf.sh"
-        "epiphany_libs.conf")
+source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip"
+        "epiphany.sh"
+        "epiphany_lib.conf")
 sha256sums=('62160f44d47b26bf815170f8a1682c87d853abb5ed9b7b533bed06d4513ad0f7'
-            '3e353c704d8276f31912e0522eed766bb61f969c8733be9f867e1dd429e5e398'
+            '3e0f6495691f4c79f558ed6ce0c975ab98b2badd70c2af02d081b33711107e58'
             '2c875c9596236b9a3f15bcf723a892d28bd30bd93963292bfde454ad9d1762e0')
 
 # default assumed path: /opt/adapteva/esdk.$pkgver/bsps/current/platform.xml
 build() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/epiphany-libs-$pkgver
 
     ./bootstrap
-    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ --enable-elib --enable-ehal
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ --enable-elib --enable-ehal  --disable-pal-target
     make
 }
 
 package() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/epiphany-libs-$pkgver
 
     install -d -m 0755 $pkgdir/opt/adapteva
     install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver
@@ -139,11 +139,12 @@ package() {
     ln -s e_lib.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/e-lib.h
 
 
-    # Add EPIPHANY_HDF to profile for all users
+    # Add EPIPHANY export HDF and PATH to profile for all users
     install -d -m 0755 $pkgdir/etc/profile.d
-    install -m 0755 $srcdir/epiphany_hdf.sh $pkgdir/etc/profile.d/.
+    install -m 0755 $srcdir/epiphany.sh $pkgdir/etc/profile.d/.
 
+    # Add EPIPHANY export for headers
     install -d -m 0755 $pkgdir/etc/ld.so.conf.d
-    install -m 0755 $srcdir/epiphany_libs.conf $pkgdir/etc/ld.so.conf.d/.
+    install -m 0755 $srcdir/epiphany_lib.conf $pkgdir/etc/ld.so.conf.d/.
 }
 
