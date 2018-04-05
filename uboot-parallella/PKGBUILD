@@ -6,7 +6,7 @@ buildarch=4
 pkgbase=uboot-parallella
 pkgver=2016.11
 pkgrel=1
-arch=(x86_64 'armv7h')
+arch=('armv7h')
 url='http://www.adapteva.com/'
 license=('GPL')
 source=('https://github.com/parallella/parabuntu/raw/master/fpga_bitfiles/parallella_e16_hdmi_gpiose_7010.bit.bin'
@@ -50,9 +50,6 @@ _package-headless-gpiose-7020() {
   mkdir -p "${pkgdir}"/boot
   install -m 0755 parallella_e16_headless_gpiose_7020.bit.bin "${pkgdir}"/boot/parallella.bit.bin
 }
-
-
-
 
 pkgname=("${pkgbase}-hdmi-gpiose-7010" "${pkgbase}-hdmi-gpiose-7020" "${pkgbase}-headless-gpiose-7010" "${pkgbase}-headless-gpiose-7020")
 for _p in ${pkgname[@]}; do
