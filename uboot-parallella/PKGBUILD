@@ -1,4 +1,4 @@
-# U-Boot: Zedboard
+# U-Boot: Adapteva Parallella
 # Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
 
 buildarch=4
