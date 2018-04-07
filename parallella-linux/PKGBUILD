@@ -24,7 +24,7 @@ source=('git+https://github.com/psiegl/parallella-linux.git'
         '99-linux.hook')
 
 sha256sums=('SKIP'
-            '18e63f29fcd5fed455db0e4d354aaa41784a43ecb7f690c4211e1c13a7903583'
+            '314cca4cf813e882a7c714802c61d1c53e5db32eb8f868d331faf0703590a033'
             'bd0f6a22d73bfea1a3098be2c4ce8dde7f8e97b6f1052a72c9d698d399aaf039'
             '33921256f44b49a4acb237dcbd8c0069db5448f102a23ba190ad506c4c2e485d'
             '2cfa699bf987a2ccedbd5fa97b7b391c7a1a67f9abcf104b8cd88053669dbe9f')
