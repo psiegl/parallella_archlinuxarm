@@ -8,34 +8,33 @@ pkgbase=linux-armv7-parallella
 _srcname=parallella-linux
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 parallella"
-pkgver=4.6
-pkgrel=2016.11
+pkgver=4.9
+pkgrel=0
 arch=('armv7h')
 url="http://www.kernel.org/"
 license=('GPL2')
 
-makedepends=(gcc uboot-tools dtc git)
-#makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'dtc')
 
 options=('!strip')
-source=('config'
+source=('git+https://github.com/psiegl/parallella-linux.git'
+        'config'
         'linux-armv7-parallella.install'
         'linux.preset'
         '99-linux.hook')
-sha256sums=('f3b0f6cdc25780966a8042ea1f99cef991c000041bd415f1ed93791b40e41f00'
-            '1508d5fe3183d62cb1bb37286849727b892ba911120e90f67f7d2263bb87028e'
-            '1731fb2980b22d3a5a31ec144fe0259747c683cf50aa558baad0d6f30b7115c3'
+
+sha256sums=('SKIP'
+            '18e63f29fcd5fed455db0e4d354aaa41784a43ecb7f690c4211e1c13a7903583'
+            'bd0f6a22d73bfea1a3098be2c4ce8dde7f8e97b6f1052a72c9d698d399aaf039'
+            '33921256f44b49a4acb237dcbd8c0069db5448f102a23ba190ad506c4c2e485d'
             '2cfa699bf987a2ccedbd5fa97b7b391c7a1a67f9abcf104b8cd88053669dbe9f')
 
 cmds="ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- LOADADDR=0x8000"
 
 prepare() {
-  cd ${srcdir}
-  git clone ../parallella-linux
-  cd ..
   cd "${srcdir}/${_srcname}"
 
-  git checkout ${_srcname}-${pkgrel}
+  git checkout ${_srcname}-2016.11-ADI2017_R1
 
   rm -rf ./.config
   cat "${srcdir}/config" > ./.config
@@ -75,7 +74,7 @@ build() {
   #yes "" | make config
 
   # build!
-  make ${cmds} uImage modules zynq-parallella.dtb zynq-parallella-headless.dtb zynq-parallella-headless-noelink.dtb
+  make ${cmds} uImage modules dtbs zynq-parallella-headless-noelink.dtb
 }
 
 _package() {
