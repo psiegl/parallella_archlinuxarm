@@ -2,7 +2,7 @@
 # arg 2:  the old package version
 
 KERNEL_NAME=-armv7-parallella
-KERNEL_VERSION=4.9.0-0-g25a46a539360-dirty
+KERNEL_VERSION=4.9.0-0-ARCH
 
 post_install () {
   # updating module dependencies
