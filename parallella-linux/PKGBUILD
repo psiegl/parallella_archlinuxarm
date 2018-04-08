@@ -8,33 +8,30 @@ pkgbase=linux-armv7-parallella
 _srcname=parallella-linux
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 parallella"
-pkgver=4.9
+pkgver=4.6
 pkgrel=0
 arch=('armv7h')
 url="http://www.kernel.org/"
 license=('GPL2')
-
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'dtc')
-
 options=('!strip')
 source=('git+https://github.com/psiegl/parallella-linux.git'
         'config'
         'linux-armv7-parallella.install'
         'linux.preset'
         '99-linux.hook')
-
 sha256sums=('SKIP'
-            '314cca4cf813e882a7c714802c61d1c53e5db32eb8f868d331faf0703590a033'
-            'bd0f6a22d73bfea1a3098be2c4ce8dde7f8e97b6f1052a72c9d698d399aaf039'
+            '3710a3def96158556a374247da895d5502a092dcd508fd967221597d73a01aee'
+            'f25a628425a857523fd4ccf13f38861bdaec01cb82157c85e6f573df52bf66c1'
             '33921256f44b49a4acb237dcbd8c0069db5448f102a23ba190ad506c4c2e485d'
             '2cfa699bf987a2ccedbd5fa97b7b391c7a1a67f9abcf104b8cd88053669dbe9f')
 
-cmds="ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- LOADADDR=0x8000"
+cmds="ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- "
 
 prepare() {
   cd "${srcdir}/${_srcname}"
 
-  git checkout ${_srcname}-2016.11-ADI2017_R1
+  git checkout ${_srcname}-2016.11-ADI2016_R2 # -> 2016_R2: kernel: 4.6
 
   rm -rf ./.config
   cat "${srcdir}/config" > ./.config
@@ -50,7 +47,7 @@ build() {
   cd "${srcdir}/${_srcname}"
 
   # get kernel version
-  make ${cmds} prepare
+  make prepare
 
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
@@ -74,7 +71,7 @@ build() {
   #yes "" | make config
 
   # build!
-  make ${cmds} uImage modules dtbs zynq-parallella-headless-noelink.dtb
+  make LOADADDR=0x8000 uImage modules dtbs zynq-parallella-headless-noelink.dtb
 }
 
 _package() {
@@ -226,8 +223,12 @@ _package-headers() {
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,x86,xtensa}
 }
 
+
 _package-hdmi() {
   pkgdesc="The Linux Kernel - ${_desc} - Adapteva Parallella (HDMI)"
+  depends=('linux-armv7-parallella')
+  provides=('linux-armv7-uimage')
+  conflicts=('linux-armv7-uimage' 'linux-armv7-rc-uimage')
 
   cd "${srcdir}/${_srcname}"
 
@@ -239,8 +240,12 @@ _package-hdmi() {
   install -m 0755 arch/$KARCH/boot/dts/zynq-parallella.dtb ${pkgdir}/boot/devicetree.dtb
 }
 
+
 _package-headless() {
   pkgdesc="The Linux Kernel - ${_desc} - Adapteva Parallella (Headless)"
+  depends=('linux-armv7-parallella')
+  provides=('linux-armv7-uimage')
+  conflicts=('linux-armv7-uimage' 'linux-armv7-rc-uimage')
 
   cd "${srcdir}/${_srcname}"
 
@@ -252,8 +257,12 @@ _package-headless() {
   install -m 0755 arch/$KARCH/boot/dts/zynq-parallella-headless.dtb ${pkgdir}/boot/devicetree.dtb
 }
 
+
 _package-headless-noelink() {
   pkgdesc="The Linux Kernel - ${_desc} - Adapteva Parallella (Headless NoELINK)"
+  depends=('linux-armv7-parallella')
+  provides=('linux-armv7-uimage')
+  conflicts=('linux-armv7-uimage' 'linux-armv7-rc-uimage')
 
   cd "${srcdir}/${_srcname}"
 
