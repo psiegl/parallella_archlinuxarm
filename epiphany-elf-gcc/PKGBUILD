@@ -48,8 +48,8 @@ build() {
   export CXXFLAGS_FOR_TARGET='-O2 -g -pipe'
 
   ../configure --target=$_target \
-               --prefix=/usr \
-               --libexecdir=/usr/lib \
+               --prefix=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l \
+               --libexecdir=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7/lib \
                --with-pkgversion='Arch Repository' \
                --with-bugurl='https://bugs.archlinux.org/' \
                --enable-multilib \
@@ -75,11 +75,12 @@ package() {
   make DESTDIR="$pkgdir" install -j1
 
   # Strip host objects but do not touch target one (strip corrupts access.o in libepiphany.a)
-  find "$pkgdir/usr/lib" -executable -type f -exec /usr/bin/strip --strip-debug '{}' \;
-  find "$pkgdir/usr/bin" -executable -type f -exec /usr/bin/strip --strip-debug '{}' \;
+  find "$pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/lib" -executable -type f -exec /usr/bin/strip --strip-debug '{}' \;
+  find "$pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/bin" -executable -type f -exec /usr/bin/strip --strip-debug '{}' \;
 
   # Remove files that conflict with host gcc package
-  rm -r "$pkgdir"/usr/share/man/man7
-  rm -r "$pkgdir"/usr/share/info
-  rm -r "$pkgdir"/usr/share/gcc-$pkgver
+  rm -r "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/share/man/man7
+  rm -r "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/share/info
+  rm -r "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/share/gcc-$pkgver
 }
+

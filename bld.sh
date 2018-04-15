@@ -27,3 +27,4 @@ package uboot-parallella uboot-parallella*hdmi*7020
 # packages for epiphany
 package epiphany-udev
 package epiphany-elf-binutils
+package epiphany-elf-gcc
