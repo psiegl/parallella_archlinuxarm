@@ -49,7 +49,7 @@ build() {
 
   ../configure --target=$_target \
                --prefix=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l \
-               --libexecdir=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7/lib \
+               --libexecdir=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/lib \
                --with-pkgversion='Arch Repository' \
                --with-bugurl='https://bugs.archlinux.org/' \
                --enable-multilib \
