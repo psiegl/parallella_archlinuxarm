@@ -6,14 +6,11 @@ pkgrel=1
 pkgdesc='Adapteva Epiphany udev rules'
 arch=('any')
 provides=(epiphany-udev-rules)
-source=("74-parallella-persistent-net.rules"
-        "90-epiphany-device.rules")
-sha256sums=('f19eaf54f9e8f6ed9b840c74ae2bafaae72455ffe38a84026ae82d714461448a'
-            '687d2fe96f8a2edb972820d1f11aa40a96c59973f5d2fa0cd0b704ca93c04655')
+source=("90-epiphany-device.rules")
+sha256sums=('687d2fe96f8a2edb972820d1f11aa40a96c59973f5d2fa0cd0b704ca93c04655')
 
 package() {
     install -d -m 0755 $pkgdir/etc/udev/rules.d
-    install -m 0644 $srcdir/74-parallella-persistent-net.rules $pkgdir/etc/udev/rules.d/.
     install -m 0644 $srcdir/90-epiphany-device.rules $pkgdir/etc/udev/rules.d/.
 }
 
