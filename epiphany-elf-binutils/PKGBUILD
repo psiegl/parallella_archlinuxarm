@@ -6,7 +6,7 @@ pkgname=$_target-binutils
 pkgver=2.30
 pkgrel=1
 pkgdesc='A set of programs to assemble and manipulate binary and object files for the Adapteva Epiphany target'
-arch=(i686 x86_64 armv7h)
+arch=(armv7h armv7l)
 url='http://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(zlib)
@@ -19,7 +19,7 @@ build() {
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 
   ./configure --target=$_target \
-              --prefix=/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l \
+              --prefix=/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH \
               --enable-multilib \
               --enable-interwork \
               --with-gnu-as \
@@ -44,9 +44,27 @@ package() {
 
   make DESTDIR="$pkgdir" install
 
+  ln -s epiphany-elf-addr2line $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-addr2line
+  ln -s epiphany-elf-ar        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ar
+  ln -s epiphany-elf-as        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-as
+  ln -s epiphany-elf-c++filt   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-c++filt
+  ln -s epiphany-elf-elfedit   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-elfedit
+  ln -s epiphany-elf-gropf     $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-gprof
+  ln -s epiphany-elf-ld        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ld
+  ln -s epiphany-elf-ld.bfd    $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ld.bfd
+  ln -s epiphany-elf-nm        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-nm
+  ln -s epiphany-elf-objcopy   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-objcopy
+  ln -s epiphany-elf-objdump   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-objdump
+  ln -s epiphany-elf-ranlib    $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ranlib
+  ln -s epiphany-elf-readelf   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-readelf
+  ln -s epiphany-elf-size      $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-size
+  ln -s epiphany-elf-strings   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-strings
+  ln -s epiphany-elf-strip     $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-strip
+
+
   # Remove file conflicting with host binutils and manpages for MS Windows tools
-  rm "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/share/man/man1/${_target}-{dlltool,nlmconv,windres,windmc}*
+  rm "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/share/man/man1/${_target}-{dlltool,nlmconv,windres,windmc}*
 
   # Remove info documents that conflict with host version
-  rm -rf "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7l/share/info
+  rm -rf "$pkgdir"/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/share/info
 }
