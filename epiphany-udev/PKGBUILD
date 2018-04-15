@@ -1,11 +1,11 @@
 # Maintainer: Patrick D. M. Siegl <archlinux@siegl.it>
 
-pkgname=epiphany-udev-rules
+pkgname=epiphany-udev
 pkgver=0
 pkgrel=1
 pkgdesc='Adapteva Epiphany udev rules'
 arch=('any')
-provides=(epiphany-udev-rules)
+provides=(epiphany-udev)
 source=("90-epiphany-device.rules")
 sha256sums=('687d2fe96f8a2edb972820d1f11aa40a96c59973f5d2fa0cd0b704ca93c04655')
 
