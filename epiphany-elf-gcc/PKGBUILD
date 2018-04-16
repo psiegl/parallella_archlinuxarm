@@ -88,5 +88,11 @@ package() {
   ln -s epiphany-elf-gcc-ranlib   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-gcc-ranlib
   ln -s epiphany-elf-gcov         $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-gcov
   ln -s epiphany-elf-gcov-tool    $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-gcov-tool
+
+
+  # Add EPIPHANY gcc compiler to profile for all users
+  install -d -m 0755 $pkgdir/etc/profile.d
+  echo "export PATH=\$PATH:/opt/adapteva/esdk.2016.11/tools/e-gnu.armv7h/bin" > $pkgdir/etc/profile.d/epiphany-elf-gcc.sh
+  chmod 755 $pkgdir/etc/profile.d/epiphany-elf-gcc.sh
 }
 

@@ -4,11 +4,11 @@ pkgname=epiphany-lib
 pkgver=2016.11
 pkgrel=2
 pkgdesc='Adapteva Epiphany runtime libraries and utilities'
-arch=(i686 x86_64 armv7h armv7l)
+arch=(armv7h armv7l)
 url='http://www.adapteva.com/'
 license=(GPL3)
 provides=(epiphany-lib)
-makedepends=(epiphany-elf-gcc) # requires ARM (cross-)compiler!
+makedepends=(epiphany-elf-gcc)
 options=(staticlibs !strip !buildflags)
 source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip"
         "epiphany.sh"
@@ -22,9 +22,10 @@ build() {
     cd $srcdir/epiphany-libs-$pkgver
 
     ./bootstrap
-    ./configure --prefix=/opt/adapteva/esdk.$pkgver/ \
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/tools/host.$CARCH \
                 --enable-esim --enable-fast-install \
-                --enable-elib --disable-ehal  --disable-pal-target
+                --enable-elib --disable-ehal  --disable-pal-target \
+		--target=epiphany-elf
     make
 }
 
