@@ -49,7 +49,6 @@ package() {
   ln -s epiphany-elf-as        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-as
   ln -s epiphany-elf-c++filt   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-c++filt
   ln -s epiphany-elf-elfedit   $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-elfedit
-  ln -s epiphany-elf-gropf     $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-gprof
   ln -s epiphany-elf-ld        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ld
   ln -s epiphany-elf-ld.bfd    $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-ld.bfd
   ln -s epiphany-elf-nm        $pkgdir/opt/adapteva/esdk.2016.11/tools/e-gnu.$CARCH/bin/e-nm

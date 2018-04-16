@@ -29,3 +29,4 @@ package epiphany-udev
 package epiphany-elf-binutils
 package epiphany-elf-gcc
 package epiphany-lib
+package epiphany-pal

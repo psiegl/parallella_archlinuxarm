@@ -11,10 +11,10 @@ provides=(epiphany-lib)
 makedepends=(epiphany-elf-gcc)
 options=(staticlibs !strip !buildflags)
 source=("https://github.com/adapteva/epiphany-libs/archive/$pkgver.zip"
-        "epiphany.sh"
-        "epiphany_lib.conf")
+        "epiphany-lib.sh"
+        "epiphany-lib.conf")
 sha256sums=('62160f44d47b26bf815170f8a1682c87d853abb5ed9b7b533bed06d4513ad0f7'
-            '97b0a343380182766f7edb21f5c97d8c8e16e66c0851644aac07792f10a921a4'
+            '31b965549368594dd6ff5e7bbcfed4d413884cd49dc98c04551de13405fc4a87'
             '2c875c9596236b9a3f15bcf723a892d28bd30bd93963292bfde454ad9d1762e0')
 
 # default assumed path: /opt/adapteva/esdk.$pkgver/bsps/current/platform.xml
@@ -22,7 +22,7 @@ build() {
     cd $srcdir/epiphany-libs-$pkgver
 
     ./bootstrap
-    ./configure --prefix=/opt/adapteva/esdk.$pkgver/tools/host.$CARCH \
+    ./configure --prefix=/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf \
                 --enable-esim --enable-fast-install \
                 --enable-elib --disable-ehal  --disable-pal-target \
 		--target=epiphany-elf
@@ -36,10 +36,11 @@ package() {
     install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver
     ln -s esdk.$pkgver $pkgdir/opt/adapteva/esdk
     install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools
-    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH
-    ln -s host.$CARCH $pkgdir/opt/adapteva/esdk.$pkgver/tools/host
-    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
-    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH
+    ln -s e-gnu.$CARCH $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu
+    install -d -m 0577 $pkdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/lib
+    install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/include
 
 
     # Install bsps, link "current" to E16 parallella
@@ -53,8 +54,8 @@ package() {
 
 
     # Install e-lib
-    install -m 0755 e-lib/libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib
-    #ln -s libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/lib/libelib.a
+    install -m 0755 e-lib/libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/lib
+    #ln -s libe-lib.a $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/lib/libelib.a
     install -m 0644 \
       e-lib/include/e_common.h \
       e-lib/include/e_coreid.h \
@@ -68,16 +69,16 @@ package() {
       e-lib/include/e_shm.h \
       e-lib/include/e_trace.h \
       e-lib/include/e_types.h \
-      $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include
-    ln -s e_lib.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/e-lib.h
+      $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/include
+    ln -s e_lib.h $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/epiphany-elf/include/e-lib.h
 
 
     # Add EPIPHANY export HDF and PATH to profile for all users
     install -d -m 0755 $pkgdir/etc/profile.d
-    install -m 0755 $srcdir/epiphany.sh $pkgdir/etc/profile.d/.
+    install -m 0755 $srcdir/epiphany-lib.sh $pkgdir/etc/profile.d/.
 
     # Add EPIPHANY export for headers
     install -d -m 0755 $pkgdir/etc/ld.so.conf.d
-    install -m 0755 $srcdir/epiphany_lib.conf $pkgdir/etc/ld.so.conf.d/.
+    install -m 0755 $srcdir/epiphany-lib.conf $pkgdir/etc/ld.so.conf.d/.
 }
 

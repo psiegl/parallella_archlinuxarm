@@ -4,11 +4,11 @@ pkgname=epiphany-pal
 pkgver=2016.11
 pkgrel=2
 pkgdesc='Adapteva Epiphany pal library'
-arch=(i686 x86_64 armv7h armv7l)
+arch=(armv7h armv7l)
 url='http://www.adapteva.com/'
 license=('Apache License')
 provides=(epiphany-pal)
-makedepends=(epiphany-elf-gcc epiphany-lib) # requires ARM (cross-)compiler!
+makedepends=(epiphany-elf-gcc epiphany-lib)
 depends=(epiphany-lib)
 options=(staticlibs !strip !buildflags)
 source=("https://github.com/parallella/pal/archive/$pkgver.zip")
@@ -18,7 +18,7 @@ build() {
   cd $srcdir/pal-$pkgver
 
   ./bootstrap
-  ./configure --prefix=/opt/adapteva/esdk.$pkgver/tools/host.$CARCH \
+  ./configure --prefix=/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH \
               --enable-device-epiphany --enable-device-epiphany-sim \
               --disable-benchmark \
               --disable-examples \
@@ -31,15 +31,11 @@ package() {
   cd $srcdir/pal-$pkgver
 
   make DESTDIR="$pkgdir/" install
-  rm -rf $pkgdir/opt/adapteva/esdk.$pkgver/epiphany-elf # doubled given
 
-  install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools
-  install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH
-  install -d -m 0755 $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/
-
-  mv $pkgdir/opt/adapteva/esdk.2016.11/lib $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/.
-  mv $pkgdir/opt/adapteva/esdk.2016.11/include/pal/* $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/include/.
-
-  rm -rf $pkgdir/opt/adapteva/esdk.$pkgver/include
+  # move host version from acceletor directory to host
+  ln -s host.$CARCH $pkgdir/opt/adapteva/esdk.$pkgver/tools/host
+  mkdir -p $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH
+  mv $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/lib $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/.
+  mv $pkgdir/opt/adapteva/esdk.$pkgver/tools/e-gnu.$CARCH/include $pkgdir/opt/adapteva/esdk.$pkgver/tools/host.$CARCH/.
 }
 
