@@ -15,8 +15,8 @@ depends=($_target-binutils libmpc)
 makedepends=(gmp mpfr)
 #checkdepends=(dejagnu)
 options=(!emptydirs !strip staticlibs)
-source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-$pkgver/gcc-$pkgver.tar.bz2
-        ftp://gcc.gnu.org/pub/gcc/snapshots/$_snapshot/gcc-$_snapshot.tar.bz2
+# https://github.com/adapteva/epiphany-gcc/archive/epiphany-gcc-5.zip
+source=(ftp://gcc.gnu.org/pub/gcc/snapshots/$_snapshot/gcc-$_snapshot.tar.bz2
         ftp://sourceware.org/pub/newlib/newlib-$_newlibver.tar.gz)
 sha256sums=('8fbb0ba3d9ab0400e6acc9cf610e525d6ce0501b3c32dfb36dda01875e1b6280'
             'c1d53fd1765d955ac513aa6e2f576455ee7507072d400314495c8a8a26ebc8ec')

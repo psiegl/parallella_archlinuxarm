@@ -30,3 +30,4 @@ package epiphany-elf-binutils
 package epiphany-elf-gcc
 package epiphany-lib
 package epiphany-pal
+package epiphany-hal
